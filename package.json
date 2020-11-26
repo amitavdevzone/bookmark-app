@@ -29,6 +29,8 @@
     "dependencies": {
         "@inertiajs/inertia": "^0.6.2",
         "@inertiajs/inertia-react": "^0.4.3",
-        "@types/react": "^16.9.56"
+        "@types/react": "^16.9.56",
+        "ziggy-js": "^0.9.4",
+        "@types/ziggy-js": "^0.9.0"
     }
 }
