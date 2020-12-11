@@ -17,6 +17,7 @@
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
         "shweshi/opengraph": "^1.0",
+        "spatie/laravel-model-cleanup": "^3.2",
         "tightenco/ziggy": "^0.9.4"
     },
     "require-dev": {
