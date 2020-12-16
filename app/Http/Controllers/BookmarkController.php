@@ -55,6 +55,8 @@ class BookmarkController extends Controller
             abort(401, 'You are not allowed to view this bookmark');
         }
 
+        $bookmark->load(['tags']);
+
         return Inertia::render('Bookmark/View/index', [
             'bookmark' => $bookmark
         ]);

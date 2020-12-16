@@ -1,0 +1,3 @@
+create api to search for tags
+use the react select component
+auth to our search api
