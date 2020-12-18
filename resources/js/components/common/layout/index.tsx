@@ -10,6 +10,9 @@ const Layout: React.FC<Props> = ({ children }) => {
         <Menu />
       </div>
       <div className="container">{children}</div>
+      <div className="mt-3 p-2">
+        <p style={{ textAlign: "center" }}>Copyright &copy; 2020</p>
+      </div>
     </React.Fragment>
   )
 }

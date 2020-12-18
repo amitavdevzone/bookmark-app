@@ -1,6 +1,8 @@
 import { InertiaLink } from "@inertiajs/inertia-react"
 import React from "react"
 import route from "ziggy-js"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faEye } from "@fortawesome/free-solid-svg-icons"
 import IBookmark from "../../../Contracts/IBookmark"
 
 interface Props {
@@ -22,7 +24,7 @@ const BookmarkItem: React.FC<Props> = ({ bookmark }) => {
             </InertiaLink>
           </div>
         )}
-        <div className="col-md-10">
+        <div className="col-md-9">
           <span>
             <InertiaLink
               href={route("bookmark.view", {
@@ -34,6 +36,18 @@ const BookmarkItem: React.FC<Props> = ({ bookmark }) => {
           </span>
           <br />
           <span>{bookmark.description}</span>
+          <br />
+          <FontAwesomeIcon icon={faEye} /> {bookmark.views}
+        </div>
+        <div className="col-md-1">
+          <a
+            href={route("bookmark.redirect", {
+              bookmark: bookmark.id
+            }).url()}
+            target="_blank"
+          >
+            Visit
+          </a>
         </div>
       </div>
     </li>

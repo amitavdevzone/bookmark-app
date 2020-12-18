@@ -1,9 +1,9 @@
-(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[8],{
+(window["webpackJsonp"] = window["webpackJsonp"] || []).push([[9],{
 
-/***/ "./resources/js/Pages/Bookmark/Add/index.tsx":
-/*!***************************************************!*\
-  !*** ./resources/js/Pages/Bookmark/Add/index.tsx ***!
-  \***************************************************/
+/***/ "./resources/js/Pages/Bookmark/View/index.tsx":
+/*!****************************************************!*\
+  !*** ./resources/js/Pages/Bookmark/View/index.tsx ***!
+  \****************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -45,34 +45,72 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inertia_1 = __webpack_require__(/*! @inertiajs/inertia */ "./node_modules/@inertiajs/inertia/dist/index.js");
 var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var async_creatable_1 = __importDefault(__webpack_require__(/*! react-select/async-creatable */ "./node_modules/react-select/async-creatable/dist/react-select.browser.esm.js"));
+var ziggy_js_1 = __importDefault(__webpack_require__(/*! ziggy-js */ "./node_modules/ziggy-js/dist/js/route.min.js"));
 var layout_1 = __importDefault(__webpack_require__(/*! ../../../components/common/layout */ "./resources/js/components/common/layout/index.tsx"));
-var loader_1 = __importDefault(__webpack_require__(/*! ../../../components/common/loader */ "./resources/js/components/common/loader/index.tsx"));
-var BookmarkAddPage = function () {
-    var _a = react_1.useState({
-        link: "",
-        title: "Some hardcoded title",
-        showLoader: false
-    }), state = _a[0], setState = _a[1];
-    var handleChange = function (event) {
-        var _a;
-        setState(__assign(__assign({}, state), (_a = {}, _a[event.currentTarget.name] = event.currentTarget.value, _a)));
-    };
-    var handleSubmit = function (event) {
-        event.preventDefault();
-        inertia_1.Inertia.post("/bookmark/preview", state, {
-            onStart: function () {
-                setState(__assign(__assign({}, state), { showLoader: true }));
-            }
+var defaltOptions = [
+    { label: "Amitav", value: "Amitav" }
+];
+var BookmarkViewPage = function (_a) {
+    var bookmark = _a.bookmark;
+    var _b = react_1.useState({
+        tags: defaltOptions
+    }), state = _b[0], setState = _b[1];
+    react_1.useEffect(function () {
+        var bookmarkTags = bookmark.tags.map(function (_a) {
+            var label = _a.name;
+            return { label: label, value: label };
         });
+        setState({ tags: bookmarkTags });
+    }, []);
+    var handleSave = function (event) {
+        event.preventDefault();
+        if (!bookmark.is_active) {
+            inertia_1.Inertia.post("/bookmark/make-active", {
+                id: bookmark.id,
+                tags: state.tags
+            });
+        }
+        else {
+            inertia_1.Inertia.post(ziggy_js_1.default("bookmark.update").url(), {
+                tags: state.tags,
+                id: bookmark.id
+            });
+        }
     };
     return (react_1.default.createElement(layout_1.default, null,
         react_1.default.createElement("div", { className: "row" },
-            react_1.default.createElement("div", { className: "col-sm-8" }, state.showLoader ? (react_1.default.createElement(loader_1.default, null)) : (react_1.default.createElement("form", { onSubmit: handleSubmit },
-                react_1.default.createElement("div", { className: "form-group" },
-                    react_1.default.createElement("label", { htmlFor: "link" }, "Link"),
-                    react_1.default.createElement("input", { type: "text", className: "form-control", name: "link", value: state.link, onChange: handleChange, placeholder: "Enter your link here" }))))))));
+            react_1.default.createElement("div", { className: "col-md-6" }, bookmark.title && (react_1.default.createElement("div", { className: "card" },
+                react_1.default.createElement("div", { className: "card-header" }, bookmark.title),
+                react_1.default.createElement("div", { className: "card-body" },
+                    react_1.default.createElement("p", null,
+                        "Url: ",
+                        bookmark.url),
+                    react_1.default.createElement("p", null, bookmark.description),
+                    react_1.default.createElement("div", { className: "mb-3" },
+                        react_1.default.createElement("img", { src: bookmark.img_url, alt: bookmark.title, width: "100%" })),
+                    react_1.default.createElement("div", { className: "mb-3" },
+                        react_1.default.createElement("div", null,
+                            react_1.default.createElement("p", null, "Tags:"),
+                            react_1.default.createElement(async_creatable_1.default, { value: state.tags, getOptionLabel: function (_a) {
+                                    var label = _a.label;
+                                    return label;
+                                }, getOptionValue: function (_a) {
+                                    var value = _a.value;
+                                    return value;
+                                }, defaultOptions: defaltOptions, loadOptions: function (value) {
+                                    return fetch("/api/tags?tag=" + value)
+                                        .then(function (response) { return response.json(); })
+                                        .then(function (data) {
+                                        return data.map(function (_a) {
+                                            var name = _a.name;
+                                            return { label: name, value: name };
+                                        });
+                                    });
+                                }, onChange: function (value, action) { return setState(__assign(__assign({}, state), { tags: value })); }, isMulti: true }))),
+                    react_1.default.createElement("button", { className: "btn btn-primary", onClick: handleSave }, "Save"))))))));
 };
-exports.default = BookmarkAddPage;
+exports.default = BookmarkViewPage;
 
 
 /***/ }),
@@ -102,30 +140,6 @@ var Layout = function (_a) {
             react_1.default.createElement("p", { style: { textAlign: "center" } }, "Copyright \u00A9 2020"))));
 };
 exports.default = Layout;
-
-
-/***/ }),
-
-/***/ "./resources/js/components/common/loader/index.tsx":
-/*!*********************************************************!*\
-  !*** ./resources/js/components/common/loader/index.tsx ***!
-  \*********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var react_fontawesome_1 = __webpack_require__(/*! @fortawesome/react-fontawesome */ "./node_modules/@fortawesome/react-fontawesome/index.es.js");
-var free_solid_svg_icons_1 = __webpack_require__(/*! @fortawesome/free-solid-svg-icons */ "./node_modules/@fortawesome/free-solid-svg-icons/index.es.js");
-var Loader = function () {
-    return react_1.default.createElement(react_fontawesome_1.FontAwesomeIcon, { icon: free_solid_svg_icons_1.faSync, spin: true, size: "5x" });
-};
-exports.default = Loader;
 
 
 /***/ }),

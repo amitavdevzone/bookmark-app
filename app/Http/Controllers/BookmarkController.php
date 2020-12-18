@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Models\Bookmark;
 use Illuminate\Http\Request;
 use App\Services\BookmarkService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class BookmarkController extends Controller
@@ -62,9 +63,19 @@ class BookmarkController extends Controller
         ]);
     }
 
-    public function makeActive(Request $request)
+    public function redirect(Bookmark $bookmark)
+    {
+        DB::table($bookmark->getTable())
+            ->where('id', $bookmark->id)
+            ->increment('views');
+
+        return redirect($bookmark->url);
+    }
+
+    public function makeActive(Request $request, BookmarkService $bookmarkService)
     {
         $postData = $this->validate($request, [
+            'tags' => ['required', 'array'],
             'id' => ['required', 'exists:bookmarks,id'],
         ]);
 
@@ -77,6 +88,29 @@ class BookmarkController extends Controller
         $bookmark->is_active = 1;
         $bookmark->save();
 
+        $ids = $bookmarkService->handleBookmarkTags($postData['tags']);
+        $bookmark->tags()->sync($ids);
+
         return redirect()->route('bookmark.index');
+    }
+
+    public function handleUpdate(Request $request, BookmarkService $bookmarkService)
+    {
+        $postData = $this->validate($request, [
+            'tags' => ['required', 'array'],
+            'id' => ['required', 'exists:bookmarks,id']
+        ]);
+
+        $bookmark = Bookmark::find($postData['id']);
+
+        if (Auth::user()->id !== $bookmark->user_id) {
+            abort(401, 'You are not allowed to make this bookmark active');
+        }
+
+        $ids = $bookmarkService->handleBookmarkTags($postData['tags']);
+
+        $bookmark->tags()->sync($ids);
+
+        return redirect()->route('bookmark.view', ['bookmark' => $bookmark->id]);
     }
 }

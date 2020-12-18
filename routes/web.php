@@ -18,5 +18,7 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('/bookmark/preview', [BookmarkController::class, 'getPreviewData'])
         ->name('bookmark.preview');
+    Route::get('/bookmark/redirect/{bookmark}', [BookmarkController::class, 'redirect'])->name('bookmark.redirect');
     Route::post('/bookmark/make-active', [BookmarkController::class, 'makeActive'])->name('bookmark.active');
+    Route::post('/bookmark/update', [BookmarkController::class, 'handleUpdate'])->name('bookmark.update');
 });

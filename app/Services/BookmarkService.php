@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Models\Tag;
+
 class BookmarkService
 {
     public function getBookmarkData(string $url)
@@ -24,5 +26,23 @@ class BookmarkService
         }
 
         return $data[$name];
+    }
+
+    public function handleBookmarkTags(array $tags)
+    {
+        $newTags = collect();
+        $existingTagNames = collect();
+
+        foreach ($tags as $tag) {
+            if (isset($tag['__isNew__'])) {
+                $tag = Tag::create(['name' => $tag['value']]);
+                $newTags->push($tag);
+            } else {
+                $existingTagNames->push(['name' => $tag['value']]);
+            }
+        }
+
+        $existingTags = Tag::whereIn('name', $existingTagNames->pluck('name'))->get();
+        return $existingTags->merge($newTags)->pluck('id');
     }
 }
