@@ -43,7 +43,7 @@ class BookmarkController extends Controller
             'type' => $data['type'],
             'url' => $postData['link'],
             'img_url' => $data['image'],
-            'user_id' => $request->user()->id,
+            'user_id' => Auth::user()->id,
         ]);
 
         return redirect()
@@ -52,7 +52,7 @@ class BookmarkController extends Controller
 
     public function view(Bookmark $bookmark)
     {
-        if (Auth::user()->id !== $bookmark->user_id) {
+        if (Auth::user()->id != $bookmark->user_id) {
             abort(401, 'You are not allowed to view this bookmark');
         }
 
@@ -81,7 +81,7 @@ class BookmarkController extends Controller
 
         $bookmark = Bookmark::find($postData['id']);
 
-        if (Auth::user()->id !== $bookmark->user_id) {
+        if (Auth::user()->id != $bookmark->user_id) {
             abort(401, 'You are not allowed to make this bookmark active');
         }
 
@@ -103,7 +103,7 @@ class BookmarkController extends Controller
 
         $bookmark = Bookmark::find($postData['id']);
 
-        if (Auth::user()->id !== $bookmark->user_id) {
+        if (Auth::user()->id != $bookmark->user_id) {
             abort(401, 'You are not allowed to make this bookmark active');
         }
 

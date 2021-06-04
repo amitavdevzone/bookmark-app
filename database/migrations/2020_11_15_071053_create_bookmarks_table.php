@@ -22,6 +22,7 @@ class CreateBookmarksTable extends Migration
             $table->text('img_url')->nullable();
             $table->foreignId('user_id');
             $table->boolean('is_active')->default(0);
+            $table->integer('views')->default(0);
             $table->timestamps();
         });
     }
