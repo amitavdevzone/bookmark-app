@@ -34,7 +34,7 @@
         "@types/react": "^16.9.56",
         "@types/react-select": "^3.0.28",
         "@types/ziggy-js": "^0.9.0",
-        "axios": "^0.21.1",
+        "axios": "^0.21.2",
         "react-select": "^3.1.1",
         "ziggy-js": "^0.9.4"
     }
